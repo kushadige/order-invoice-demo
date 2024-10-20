@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Invoice {
+  id           Int       @id @default(autoincrement())
+  invoiceId    String    @unique @map("invoice_id") // e.g. INV-2021-0001
+  orderDetails Json      @map("order_details")
+  invoiceDate  DateTime  @default(now()) @map("invoice_date")
+
+  @@map("invoices")
+}
+
+model Outbox {
+  id          Int           @id @default(autoincrement())
+  message     String
+  type        String
+  createdAt   DateTime      @default(now()) @map("created_at")
+  status      OutboxStatus  @default(PENDING)
+  attempts    Int           @default(0)
+
+  @@map("outbox")
+}
+
+enum OutboxStatus {
+  PENDING
+  IN_PROGRESS
+  FAILED
+  COMPLETED
+}

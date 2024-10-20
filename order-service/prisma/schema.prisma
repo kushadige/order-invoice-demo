@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          Int     @id @default(autoincrement())
+  code        String  @unique // e.g. PRD-0001
+  name        String
+  price       Float
+  tax         Float
+  discount    Float?   // Discount is optional.
+  stock       Int      @default(0) // Current stock amount.
+  orders      Order[]  @relation("OrderProducts") // This field indicates in which orders the product is found.
+
+  @@map("products")
+}
+
+model Order {
+  id          Int       @id @default(autoincrement())
+  orderId     String    @unique @map("order_id") // e.g. ORD-0001
+  products    Product[] @relation("OrderProducts") // Specifies which products are in an order.
+  totalAmount Float     @map("total_amount")
+  orderDate   DateTime  @default(now()) @map("order_date")
+  invoiceId   Int?      @map("invoice_id")
+
+  @@map("orders")
+}
+
+model Outbox {
+  id          Int           @id @default(autoincrement())
+  message     String
+  type        String
+  createdAt   DateTime      @default(now()) @map("created_at")
+  status      OutboxStatus  @default(PENDING)
+  attempts    Int           @default(0)
+
+  @@map("outbox")
+}
+
+enum OutboxStatus {
+  PENDING
+  IN_PROGRESS
+  FAILED
+  COMPLETED
+}
