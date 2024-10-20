@@ -44,6 +44,9 @@ services:
     container_name: order-service
     environment:
       AMQP_URL: ${AMQP_URL}
+      DATABASE_URL: ${ORDER_DATABASE_URL}
+      INVOICE_SERVICE_URL: ${INVOICE_SERVICE_URL}
+      PORT: ${ORDER_SERVICE_PORT}
 
   invoice-service:
     build:
@@ -58,6 +61,9 @@ services:
     container_name: invoice-service
     environment:
       AMQP_URL: ${AMQP_URL}
+      DATABASE_URL: ${INVOICE_DATABASE_URL}
+      ORDER_SERVICE_URL: ${ORDER_SERVICE_URL}
+      PORT: ${INVOICE_SERVICE_PORT}
 
 volumes:
   order-invoice-postgres-order-data:
