@@ -161,7 +161,7 @@ This project is a demonstration of an order-invoice system using modern technolo
 2. View the order and invoice data in the database.
 3. Check the logs to see the order and invoice processing. (also check outbox message processing in database)
 4. View the RabbitMQ management console to see the message queues.
-5. Stop the application using `Ctrl+C` and remove the containers using `docker-compose down`.
+5. Stop the application using `Ctrl+C` and remove the containers using `docker-compose down`. (use --volumes to remove volumes)
 
 ## Outbox Message Pattern
 
